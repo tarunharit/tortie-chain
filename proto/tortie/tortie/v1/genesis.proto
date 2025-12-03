@@ -1,0 +1,17 @@
+syntax = "proto3";
+package tortie.tortie.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "tortie/tortie/v1/params.proto";
+
+option go_package = "tortie/x/tortie/types";
+
+// GenesisState defines the tortie module's genesis state.
+message GenesisState {
+  // params defines all the parameters of the module.
+  Params params = 1 [
+    (gogoproto.nullable) = false,
+    (amino.dont_omitempty) = true
+  ];
+}

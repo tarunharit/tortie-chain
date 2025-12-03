@@ -1,0 +1,13 @@
+syntax = "proto3";
+package tortie.tortie.v1;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "tortie/x/tortie/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (amino.name) = "tortie/x/tortie/Params";
+  option (gogoproto.equal) = true;
+}

@@ -4,7 +4,7 @@ import (
 	"github.com/cosmos/cosmos-sdk/types/module"
 	simtypes "github.com/cosmos/cosmos-sdk/types/simulation"
 
-	"tortie/x/tortie/types"
+	"github.com/tarunharit/tortie-chain/x/tortie/types"
 )
 
 // GenerateGenesisState creates a randomized GenState of the module.

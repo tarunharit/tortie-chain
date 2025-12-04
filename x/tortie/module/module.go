@@ -14,8 +14,8 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/runtime"
 	"google.golang.org/grpc"
 
-	"tortie/x/tortie/keeper"
-	"tortie/x/tortie/types"
+	"github.com/tarunharit/tortie-chain/x/tortie/keeper"
+	"github.com/tarunharit/tortie-chain/x/tortie/types"
 )
 
 var (

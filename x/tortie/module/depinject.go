@@ -9,8 +9,8 @@ import (
 	"github.com/cosmos/cosmos-sdk/codec"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 
-	"tortie/x/tortie/keeper"
-	"tortie/x/tortie/types"
+	"github.com/tarunharit/tortie-chain/x/tortie/keeper"
+	"github.com/tarunharit/tortie-chain/x/tortie/types"
 )
 
 var _ depinject.OnePerModuleType = AppModule{}

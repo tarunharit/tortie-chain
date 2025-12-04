@@ -3,7 +3,7 @@ package keeper
 import (
 	"context"
 
-	"tortie/x/tortie/types"
+	"github.com/tarunharit/tortie-chain/x/tortie/types"
 )
 
 // InitGenesis initializes the module's state from a provided genesis state.

@@ -1,7 +1,7 @@
 package keeper
 
 import (
-	"tortie/x/tortie/types"
+	"github.com/tarunharit/tortie-chain/x/tortie/types"
 )
 
 var _ types.QueryServer = queryServer{}

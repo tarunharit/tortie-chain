@@ -3,7 +3,7 @@ package tortie
 import (
 	autocliv1 "cosmossdk.io/api/cosmos/autocli/v1"
 
-	"tortie/x/tortie/types"
+	"github.com/tarunharit/tortie-chain/x/tortie/types"
 )
 
 // AutoCLIOptions implements the autocli.HasAutoCLIConfig interface.

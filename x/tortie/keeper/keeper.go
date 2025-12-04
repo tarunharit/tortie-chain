@@ -8,7 +8,7 @@ import (
 	corestore "cosmossdk.io/core/store"
 	"github.com/cosmos/cosmos-sdk/codec"
 
-	"tortie/x/tortie/types"
+	"github.com/tarunharit/tortie-chain/x/tortie/types"
 )
 
 type Keeper struct {

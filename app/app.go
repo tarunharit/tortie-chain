@@ -45,8 +45,8 @@ import (
 	ibctransferkeeper "github.com/cosmos/ibc-go/v10/modules/apps/transfer/keeper"
 	ibckeeper "github.com/cosmos/ibc-go/v10/modules/core/keeper"
 
-	"tortie/docs"
-	tortiemodulekeeper "tortie/x/tortie/keeper"
+	"github.com/tarunharit/tortie-chain/docs"
+"github.com/tarunharit/tortie-chain/x/tortie/keeper"
 )
 
 const (

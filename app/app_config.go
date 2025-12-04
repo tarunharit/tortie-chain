@@ -2,8 +2,8 @@ package app
 
 import (
 	"time"
-	_ "tortie/x/tortie/module"
-	tortiemoduletypes "tortie/x/tortie/types"
+	_ "github.com/tarunharit/tortie-chain/x/tortie/module"
+	tortiemoduletypes "github.com/tarunharit/tortie-chain/x/tortie/types"
 
 	runtimev1alpha1 "cosmossdk.io/api/cosmos/app/runtime/v1alpha1"
 	appv1alpha1 "cosmossdk.io/api/cosmos/app/v1alpha1"

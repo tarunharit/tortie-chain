@@ -7,8 +7,8 @@ import (
 	clienthelpers "cosmossdk.io/client/v2/helpers"
 	svrcmd "github.com/cosmos/cosmos-sdk/server/cmd"
 
-	"tortie/app"
-	"tortie/cmd/tortied/cmd"
+	"github.com/tarunharit/tortie-chain/app"
+	"github.com/tarunharit/tortie-chain/cmd/tortied/cmd"
 )
 
 func main() {

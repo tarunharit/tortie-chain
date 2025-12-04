@@ -1,4 +1,4 @@
-module tortie
+module github.com/tarunharit/tortie-chain
 
 go 1.24.1
 

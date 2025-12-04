@@ -27,7 +27,7 @@ import (
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 
-	"tortie/app"
+	"github.com/tarunharit/tortie-chain/app"
 )
 
 const valVotingPower int64 = 900000000000000

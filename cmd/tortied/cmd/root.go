@@ -17,8 +17,65 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/spf13/cobra"
 
-	"tortie/app"
+	// FIXED import
+	"github.com/tarunharit/tortie-chain/app"
 )
+
+// NewRootCmd creates a new root command for tortied. It is called once in the main function.
+func NewRootCmd() *cobra.Command {
+	var (
+		autoCliOpts        autocli.AppOptions
+		moduleBasicManager module.BasicManager
+		clientCtx          client.Context
+	)
+
+	if err := depinject.Inject(
+		depinject.Configs(app.AppConfig(),
+			depinject.Supply(log.NewNopLogger()),
+			depinject.Provide(
+				ProvideClientContext,
+			),
+		),
+		&autoCliOpts,
+		&moduleBasicManager,
+		&clientCtx,
+	); err != nil {
+		panic(err)
+	}
+
+	rootCmd := &cobra.Command{
+		Use:           app.Name + "d",
+		Short:         "tortie node",
+		SilenceErrors: true,
+		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
+			// set the default command outputs
+			cmd.SetOut(cmd.OutOrStdout())
+			cmd.SetErr(cmd.ErrOrStderr())
+
+			clientCtx = clientCtx.WithCmdContext(cmd.Context()).WithViper(app.Name)
+			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
+			if err != nil {
+				return err
+			}
+
+			clientCtx, err = config.ReadFromClientConfig(clientCtx)
+			if err != nil {
+				return err
+			}
+
+			if err := client.SetCmdClientContextHandler(clientCtx, cmd); err != nil {
+				return err
+			}
+
+			customAppTemplate, customAppConfig := initAppConfig()
+			customCMTConfig := initCometBFTConfig()
+
+			return server.InterceptConfigsPreRunHandler(cmd, customAppTemplate, customAppConfig, customCMTConfig)
+		},
+	}
+
+	// Since the IBC modules don't support dependency inject
+
 
 // NewRootCmd creates a new root command for tortied. It is called once in the main function.
 func NewRootCmd() *cobra.Command {

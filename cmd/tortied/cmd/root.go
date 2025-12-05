@@ -17,11 +17,10 @@ import (
 	"github.com/cosmos/cosmos-sdk/x/auth/types"
 	"github.com/spf13/cobra"
 
-	// FIXED import
 	"github.com/tarunharit/tortie-chain/app"
 )
 
-// NewRootCmd creates a new root command for tortied. It is called once in the main function.
+// NewRootCmd creates the root CLI command for tortied.
 func NewRootCmd() *cobra.Command {
 	var (
 		autoCliOpts        autocli.AppOptions
@@ -30,11 +29,10 @@ func NewRootCmd() *cobra.Command {
 	)
 
 	if err := depinject.Inject(
-		depinject.Configs(app.AppConfig(),
+		depinject.Configs(
+			app.AppConfig(),
 			depinject.Supply(log.NewNopLogger()),
-			depinject.Provide(
-				ProvideClientContext,
-			),
+			depinject.Provide(ProvideClientContext),
 		),
 		&autoCliOpts,
 		&moduleBasicManager,
@@ -45,15 +43,16 @@ func NewRootCmd() *cobra.Command {
 
 	rootCmd := &cobra.Command{
 		Use:           app.Name + "d",
-		Short:         "tortie node",
+		Short:         "Tortie blockchain node",
 		SilenceErrors: true,
 		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
-			// set the default command outputs
 			cmd.SetOut(cmd.OutOrStdout())
 			cmd.SetErr(cmd.ErrOrStderr())
 
 			clientCtx = clientCtx.WithCmdContext(cmd.Context()).WithViper(app.Name)
-			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
+
+			var err error
+			clientCtx, err = client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
 			if err != nil {
 				return err
 			}
@@ -74,65 +73,7 @@ func NewRootCmd() *cobra.Command {
 		},
 	}
 
-	// Since the IBC modules don't support dependency inject
-
-
-// NewRootCmd creates a new root command for tortied. It is called once in the main function.
-func NewRootCmd() *cobra.Command {
-	var (
-		autoCliOpts        autocli.AppOptions
-		moduleBasicManager module.BasicManager
-		clientCtx          client.Context
-	)
-
-	if err := depinject.Inject(
-		depinject.Configs(app.AppConfig(),
-			depinject.Supply(log.NewNopLogger()),
-			depinject.Provide(
-				ProvideClientContext,
-			),
-		),
-		&autoCliOpts,
-		&moduleBasicManager,
-		&clientCtx,
-	); err != nil {
-		panic(err)
-	}
-
-	rootCmd := &cobra.Command{
-		Use:           app.Name + "d",
-		Short:         "tortie node",
-		SilenceErrors: true,
-		PersistentPreRunE: func(cmd *cobra.Command, _ []string) error {
-			// set the default command outputs
-			cmd.SetOut(cmd.OutOrStdout())
-			cmd.SetErr(cmd.ErrOrStderr())
-
-			clientCtx = clientCtx.WithCmdContext(cmd.Context()).WithViper(app.Name)
-			clientCtx, err := client.ReadPersistentCommandFlags(clientCtx, cmd.Flags())
-			if err != nil {
-				return err
-			}
-
-			clientCtx, err = config.ReadFromClientConfig(clientCtx)
-			if err != nil {
-				return err
-			}
-
-			if err := client.SetCmdClientContextHandler(clientCtx, cmd); err != nil {
-				return err
-			}
-
-			customAppTemplate, customAppConfig := initAppConfig()
-			customCMTConfig := initCometBFTConfig()
-
-			return server.InterceptConfigsPreRunHandler(cmd, customAppTemplate, customAppConfig, customCMTConfig)
-		},
-	}
-
-	// Since the IBC modules don't support dependency injection, we need to
-	// manually register the modules on the client side.
-	// This needs to be removed after IBC supports App Wiring.
+	// Register IBC modules manually (required until full DI support is added).
 	ibcModules := app.RegisterIBC(clientCtx.Codec)
 	for name, mod := range ibcModules {
 		moduleBasicManager[name] = module.CoreAppModuleBasicAdaptor(name, mod)
@@ -148,8 +89,7 @@ func NewRootCmd() *cobra.Command {
 	return rootCmd
 }
 
-// ProvideClientContext creates and provides a fully initialized client.Context,
-// allowing it to be used for dependency injection and CLI operations.
+// ProvideClientContext creates and configures a client.Context.
 func ProvideClientContext(
 	appCodec codec.Codec,
 	interfaceRegistry codectypes.InterfaceRegistry,
@@ -163,18 +103,16 @@ func ProvideClientContext(
 		WithInput(os.Stdin).
 		WithAccountRetriever(types.AccountRetriever{}).
 		WithHomeDir(app.DefaultNodeHome).
-		WithViper(app.Name) // env variable prefix
+		WithViper(app.Name)
 
-	// Read the config again to overwrite the default values with the values from the config file
 	clientCtx, _ = config.ReadFromClientConfig(clientCtx)
 
-	// textual is enabled by default, we need to re-create the tx config grpc instead of bank keeper.
 	txConfigOpts.TextualCoinMetadataQueryFn = authtxconfig.NewGRPCCoinMetadataQueryFn(clientCtx)
-	txConfig, err := tx.NewTxConfigWithOptions(clientCtx.Codec, txConfigOpts)
+
+	txCfg, err := tx.NewTxConfigWithOptions(clientCtx.Codec, txConfigOpts)
 	if err != nil {
 		panic(err)
 	}
-	clientCtx = clientCtx.WithTxConfig(txConfig)
 
-	return clientCtx
+	return clientCtx.WithTxConfig(txCfg)
 }

@@ -47,7 +47,7 @@ jobs:
 
       - name: Publish the Release
         uses: softprops/action-gh-release@v1
-        if: ${{ steps.vars.outputs.should_release == 'true' }}
+        if: false
         with:
           tag_name: ${{ steps.vars.outputs.tag_name }}
           files: release/*

@@ -46,7 +46,7 @@ import (
 	ibckeeper "github.com/cosmos/ibc-go/v10/modules/core/keeper"
 
 	"github.com/tarunharit/tortie-chain/docs"
-"github.com/tarunharit/tortie-chain/x/tortie/keeper"
+tortiekeeper "github.com/tarunharit/tortie-chain/x/tortie/keeper"
 )
 
 const (
@@ -100,7 +100,7 @@ type App struct {
 
 	// simulation manager
 	sm           *module.SimulationManager
-	TortieKeeper tortiemodulekeeper.Keeper
+	TortieKeeper tortiekeeper.Keeper
 }
 
 func init() {

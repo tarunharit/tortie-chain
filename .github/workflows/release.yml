@@ -16,9 +16,18 @@ jobs:
       - name: Build Tortie Chain binaries
         run: |
           mkdir -p release
-          GOOS=linux  GOARCH=amd64  go build -o release/tortie-chaind-linux-amd64  ./cmd/tortie-chaind
-          GOOS=darwin GOARCH=arm64  go build -o release/tortie-chaind-darwin-arm64 ./cmd/tortie-chaind
-          GOOS=darwin GOARCH=amd64 go build -o release/tortie-chaind-darwin-amd64 ./cmd/tortie-chaind
+
+          # Linux amd64
+          GOOS=linux  GOARCH=amd64 \
+            go build -o release/tortied-linux-amd64 ./cmd/tortied
+
+          # macOS ARM (M1/M2/M3)
+          GOOS=darwin GOARCH=arm64 \
+            go build -o release/tortied-darwin-arm64 ./cmd/tortied
+
+          # macOS Intel
+          GOOS=darwin GOARCH=amd64 \
+            go build -o release/tortied-darwin-amd64 ./cmd/tortied
 
       # Create the GitHub Release + upload files
       - name: Publish Release
